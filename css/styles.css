@@ -8,6 +8,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	z-index: 2;
 }
 
 .at-the-top {
@@ -24,7 +25,7 @@
 
 .header--hidden {
 	background-color: red;
-	top: -10%;
+	top: -30%;
 	transition: all ease-out 0.5s;
 }
 
@@ -93,7 +94,7 @@
 
 .hero__image {
 	width: 12%;
-	top: 20%;
+	top: 10%;
 	position: absolute;
 	opacity: 0.3;
 }

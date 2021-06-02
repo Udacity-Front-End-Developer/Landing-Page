@@ -47,7 +47,6 @@
 // Scroll to section on link click
 
 // Set sections as active
-
 const sectionList = document.querySelectorAll('.content__section');
 
 window.addEventListener('scroll', (e) => {
@@ -74,6 +73,13 @@ window.addEventListener('scroll', (e) => {
 	} else {
 		header.classList.add('at-the-top');
 	}
+});
+
+// Moving the hero image when scrolling in the hero section :D.
+const heroImage = document.querySelector('.hero__image');
+window.addEventListener('scroll', () => {
+	if (window.scrollY < (window.innerHeight * 40) / 100)
+		heroImage.style.transform = `translateY(${window.scrollY}px)`;
 });
 
 // Toggling the active class for the nav items.
