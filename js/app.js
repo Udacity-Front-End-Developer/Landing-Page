@@ -128,3 +128,23 @@ document.addEventListener('scroll', () => {
 		scrollTimeoutId = setTimeout(toggleNav, 2000);
 	}
 });
+
+// On document load, get the list of sections.
+window.addEventListener('load', () => {
+	let menuList = document.querySelector('.menu-list');
+	let sectionsList = document.querySelectorAll('.content__section');
+	const listOfColors = ['yellow', 'green', 'blue', 'red'];
+	// create an li element.
+	const fragment = document.createDocumentFragment();
+	for (let i = 0; i < sectionList.length; i++) {
+		let listItem = document.createElement('li');
+		let listItemLink = document.createElement('a');
+		listItemLink.innerText = sectionList[i].getAttribute('data-menu');
+		listItemLink.setAttribute('href', sectionList[i].getAttribute('id'));
+		listItemLink.classList.add('header__link');
+		listItemLink.classList.add(`header__link--${listOfColors[i]}`);
+		listItem.appendChild(listItemLink);
+		fragment.appendChild(listItem);
+	}
+	menuList.appendChild(fragment);
+});
