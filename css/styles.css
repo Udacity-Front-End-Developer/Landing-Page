@@ -2,6 +2,7 @@
 	margin: 0;
 	padding: 0;
 	scroll-behavior: smooth;
+	box-sizing: border-box;
 }
 
 .header {
@@ -114,9 +115,13 @@
 
 .content__section {
 	height: 100vh;
+	text-align: center;
+	overflow: hidden;
 }
 
 .content__section h2 {
+	font-family: 'Dosis', sans-serif;
+	font-size: 2em;
 	position: relative;
 	left: 100%;
 	transition: all ease-in 0.5s;
@@ -126,4 +131,6 @@ p {
 	position: relative;
 	right: 100%;
 	transition: all ease-in 0.5s;
+	font-family: 'Montserrat', sana-serif;
+	padding: 1em;
 }

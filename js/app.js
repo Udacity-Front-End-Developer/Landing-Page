@@ -17,6 +17,13 @@
  * Define Global Variables
  *
  */
+const sectionList = document.querySelectorAll('.content__section');
+const header = document.querySelector('.header');
+const hero = document.querySelector('.hero');
+const heroImage = document.querySelector('.hero__image');
+const menuList = document.querySelector('.menu-list');
+let sectionsList = [];
+const menuChildrenList = menuList.children;
 
 /**
  * End Global Variables
@@ -35,6 +42,22 @@
 // Add class 'active' to section when near top of viewport
 
 // Scroll to anchor ID using scrollTO event
+/* CSS property scroll-behavior takes care of this,
+ but the section header is overlayed by the menubar*/
+menuList.addEventListener('click', (event) => {
+	if (event.target.nodeName === 'A') {
+		event.preventDefault();
+		let link = event.target;
+		let target = document.querySelector(link.getAttribute('href'));
+		console.log(target.offsetHeight);
+		let targetTop = target.getBoundingClientRect().top;
+		let top = targetTop - menuList.offsetHeight;
+		window.scrollBy({
+			top: top,
+			// Behavior is already set in the css
+		});
+	}
+});
 
 /**
  * End Main Functions
@@ -47,26 +70,31 @@
 // Scroll to section on link click
 
 // Set sections as active
-const sectionList = document.querySelectorAll('.content__section');
-
+let activeSection;
+console.log(activeSection);
 window.addEventListener('scroll', (e) => {
 	for (section of sectionList) {
 		let position = section.getBoundingClientRect().top;
 		let paragraphsList = section.querySelectorAll('p');
-		// 1:when active, 2:when inactive
+		// Checking position against the two scroll states(1:when active, 2:when inactive).
 		if (
 			position < (window.innerHeight * 50) / 100 &&
 			position > (-window.innerHeight * 50) / 100
 		) {
 			section.style.border = '1px solid red';
-			section.children[0].style.left = 0; // header
+			// console.log(section);
+			// header.
+			section.children[0].style.left = 0;
+			// paragraphs.
 			for (let paragraph of paragraphsList) {
 				paragraph.style.right = 0;
 			}
 		} else {
 			if (section.style.border) {
 				section.style.border = '';
-				section.children[0].style.left = `${100}%`; // header
+				// header.
+				section.children[0].style.left = `${100}%`;
+				// paragraphs.
 				for (let paragraph of paragraphsList) {
 					paragraph.style.right = `${100}%`;
 				}
@@ -76,7 +104,6 @@ window.addEventListener('scroll', (e) => {
 });
 
 // Changing the header's background color depending on its scroll position.
-const header = document.querySelector('.header');
 window.addEventListener('scroll', (e) => {
 	if (window.pageYOffset >= (window.innerHeight * 40) / 100) {
 		header.classList.remove('at-the-top');
@@ -86,15 +113,13 @@ window.addEventListener('scroll', (e) => {
 });
 
 // Moving the hero image when scrolling in the hero section :D.
-const heroImage = document.querySelector('.hero__image');
 window.addEventListener('scroll', () => {
 	if (window.scrollY < (window.innerHeight * 40) / 100)
 		heroImage.style.transform = `translateY(${window.scrollY}px)`;
 });
 
 // Toggling the active class for the nav items.
-const menuList = document.querySelector('.menu-list');
-const menuChildrenList = menuList.children;
+
 const removeActiveClassFromLinks = (list) => {
 	for (let item of list) {
 		item.children[0].classList.remove('header__link--active');
@@ -110,7 +135,6 @@ const onMenuItemClick = (event) => {
 menuList.addEventListener('click', onMenuItemClick);
 
 // Hiding the navigation menu when not scrolling.
-const hero = document.querySelector('.hero');
 const toggleNav = () =>
 	header.classList.toggle('header--hidden', 'header--visible');
 let scrollTimeoutId;
@@ -141,8 +165,7 @@ document.addEventListener('scroll', () => {
 
 // On document load, get the list of sections.
 window.addEventListener('load', () => {
-	let menuList = document.querySelector('.menu-list');
-	let sectionsList = document.querySelectorAll('.content__section');
+	[...sectionsList] = document.querySelectorAll('.content__section');
 	const listOfColors = ['yellow', 'green', 'blue', 'red'];
 	// create an li element.
 	const fragment = document.createDocumentFragment();
