@@ -100,6 +100,7 @@ const onMenuItemClick = (event) => {
 menuList.addEventListener('click', onMenuItemClick);
 
 // Hiding the navigation menu when not scrolling.
+const hero = document.querySelector('.hero');
 const toggleNav = () =>
 	header.classList.toggle('header--hidden', 'header--visible');
 let scrollTimeoutId;
@@ -109,13 +110,13 @@ header.addEventListener('mouseover', () => clearScrollTimer());
 // Restarting timeout when mouse leaves menu.
 header.addEventListener('mouseleave', () => {
 	// Check if not at the top of the page.
-	if (window.scrollY) {
+	if (window.scrollY >= hero.offsetHeight) {
 		scrollTimeoutId = setTimeout(toggleNav, 2000);
 	}
 });
-
 document.addEventListener('scroll', () => {
-	if (window.scrollY === 0) {
+	// Only hides the menu, if the view is outside of the hero section.
+	if (window.scrollY <= hero.offsetHeight) {
 		clearScrollTimer();
 	} else {
 		// Brings back the menu on scroll.
