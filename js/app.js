@@ -1,159 +1,161 @@
-/**
- *
- * Manipulating the DOM exercise.
- * Exercise programmatically builds navigation,
- * scrolls to anchors from navigation,
- * and highlights section in viewport upon scrolling.
- *
- * Dependencies: None
- *
- * JS Version: ES2015/ES6
- *
- * JS Standard: ESlint
- *
- */
+/*
+# ---------------------------<|----------------|>--------------------------- #
+# ----------------------------|GLOBAL VARIABLES|---------------------------- #
+# ---------------------------<|----------------|>--------------------------- #
+*/
 
-/**
- * Define Global Variables
- *
- */
-const sectionList = document.querySelectorAll('.content__section');
 const header = document.querySelector('.header');
 const hero = document.querySelector('.hero');
 const heroImage = document.querySelector('.hero__image');
 const menuList = document.querySelector('.menu-list');
-let sectionsList = [];
 const menuChildrenList = menuList.children;
+const listOfColors = ['yellow', 'green', 'blue', 'red']; // Optional
+let sectionsList = [];
+let currentActiveSection;
+let scrollTimeoutId; // Init the scolling timer.
 
-/**
- * End Global Variables
- * Start Helper Functions
- *
+/*
+# ----------------------------<|----------------|>--------------------------- #
+# -----------------------------|HELPER FUNCTIONS|---------------------------- #
+# ----------------------------<|----------------|>--------------------------- #
+*/
+/*
+# -----------------------------|section's helpers|---------------------------- #
  */
 
-/**
- * End Helper Functions
- * Begin Main Functions
- *
+// Set section state to active.
+const setSectionStateTo_Active = (section, paragraphsList) => {
+	currentActiveSection = section;
+	// TODO: add a class of active.
+	section.style.border = '1px solid red';
+	// header.
+	section.children[0].style.left = 0;
+	// paragraphs.
+	for (let paragraph of paragraphsList) {
+		paragraph.style.right = 0;
+	}
+};
+// Set section state to inactive.
+const setSectionStateTo_Inactive = (section, paragraphsList) => {
+	currentActiveSection = null;
+	section.style.border = '';
+	// header.
+	section.children[0].style.left = `${100}%`;
+	// paragraphs.
+	for (let paragraph of paragraphsList) {
+		paragraph.style.right = `${100}%`;
+	}
+};
+
+const positionTrigger = (position) =>
+	position < (window.innerHeight * 50) / 100 &&
+	position > (-window.innerHeight * 50) / 100;
+
+const setSectionState = () => {
+	for (section of sectionsList) {
+		let position = section.getBoundingClientRect().top;
+		let paragraphsList = section.querySelectorAll('p');
+		// Checking position against the two scroll states(1:when active, 2:when inactive).
+		if (positionTrigger(position)) {
+			// Only run this if we don't have a currentActiveSection.
+			if (!currentActiveSection) {
+				setSectionStateTo_Active(section, paragraphsList);
+			}
+		} else {
+			if (section.style.border) {
+				setSectionStateTo_Inactive(section, paragraphsList);
+			}
+		}
+	}
+};
+
+// Scroll to section. using scrollBy.
+/* CSS property scroll-behavior takes care of the scrolling behavior,
+ but the section header gets overlayed by the menubar when it's active,
+ that's why scrollToSection scrolls to top of a section minus the height
+ of the menubar
  */
-
-// build the nav
-
-// Add class 'active' to section when near top of viewport
-
-// Scroll to anchor ID using scrollTO event
-/* CSS property scroll-behavior takes care of this,
- but the section header is overlayed by the menubar*/
-menuList.addEventListener('click', (event) => {
-	if (event.target.nodeName === 'A') {
-		event.preventDefault();
-		let link = event.target;
+const scrollToSection = (e) => {
+	if (e.target.nodeName === 'A') {
+		e.preventDefault();
+		let link = e.target;
 		let target = document.querySelector(link.getAttribute('href'));
-		console.log(target.offsetHeight);
 		let targetTop = target.getBoundingClientRect().top;
 		let top = targetTop - menuList.offsetHeight;
 		window.scrollBy({
 			top: top,
-			// Behavior is already set in the css
+			// Scroll behavior is already set in the styleSheet.
 		});
 	}
-});
+};
 
-/**
- * End Main Functions
- * Begin Events
- *
+/*
+# ---------------------------|menu & links' helpers|-------------------------- #
  */
 
-// Build menu
-
-// Scroll to section on link click
-
-// Set sections as active
-let activeSection;
-console.log(activeSection);
-window.addEventListener('scroll', (e) => {
-	for (section of sectionList) {
-		let position = section.getBoundingClientRect().top;
-		let paragraphsList = section.querySelectorAll('p');
-		// Checking position against the two scroll states(1:when active, 2:when inactive).
-		if (
-			position < (window.innerHeight * 50) / 100 &&
-			position > (-window.innerHeight * 50) / 100
-		) {
-			section.style.border = '1px solid red';
-			// console.log(section);
-			// header.
-			section.children[0].style.left = 0;
-			// paragraphs.
-			for (let paragraph of paragraphsList) {
-				paragraph.style.right = 0;
-			}
-		} else {
-			if (section.style.border) {
-				section.style.border = '';
-				// header.
-				section.children[0].style.left = `${100}%`;
-				// paragraphs.
-				for (let paragraph of paragraphsList) {
-					paragraph.style.right = `${100}%`;
-				}
-			}
-		}
+// Builds the navigation menu from the list of sections.
+const navMenuBuilder = () => {
+	// Populate the list of sections.
+	[...sectionsList] = document.querySelectorAll('.content__section');
+	const fragment = document.createDocumentFragment();
+	for (let i = 0; i < sectionsList.length; i++) {
+		let listItem = document.createElement('li');
+		let listItemLink = document.createElement('a');
+		listItemLink.innerText = sectionsList[i].getAttribute('data-menu');
+		listItemLink.setAttribute('href', `#${sectionsList[i].getAttribute('id')}`);
+		listItemLink.classList.add('header__link');
+		listItemLink.classList.add(`header__link--${listOfColors[i]}`);
+		sectionsList[i].style.backgroundColor = listOfColors[i];
+		listItem.appendChild(listItemLink);
+		fragment.appendChild(listItem);
 	}
-});
+	menuList.appendChild(fragment);
+};
 
-// Changing the header's background color depending on its scroll position.
-window.addEventListener('scroll', (e) => {
-	if (window.pageYOffset >= (window.innerHeight * 40) / 100) {
+// Changes the header's background color according to its scroll position.
+const setHeaderBackground = (e) => {
+	let trigger = (window.innerHeight * 40) / 100; // percentage of the screen height.
+	if (window.pageYOffset >= trigger) {
 		header.classList.remove('at-the-top');
 	} else {
 		header.classList.add('at-the-top');
 	}
-});
+};
 
-// Moving the hero image when scrolling in the hero section :D.
-window.addEventListener('scroll', () => {
+// Moving the hero image( "parachuting page") when scrolling in the hero section :D.
+const svgAnimate = () => {
 	if (window.scrollY < (window.innerHeight * 40) / 100)
 		heroImage.style.transform = `translateY(${window.scrollY}px)`;
-});
+};
 
-// Toggling the active class for the nav items.
-
+// Removes the active class for the nav items.
 const removeActiveClassFromLinks = (list) => {
 	for (let item of list) {
 		item.children[0].classList.remove('header__link--active');
 	}
 };
 
+// Makes the link active.
 const onMenuItemClick = (event) => {
 	if (event.target.nodeName === 'A') {
+		// Pass the list of the links to the remove function.
 		removeActiveClassFromLinks(menuChildrenList);
 		event.target.classList.add('header__link--active');
 	}
 };
-menuList.addEventListener('click', onMenuItemClick);
 
-// Hiding the navigation menu when not scrolling.
-const toggleNav = () =>
+// Toggles the visibility of the navigation menu.
+const toggleNav = () => {
 	header.classList.toggle('header--hidden', 'header--visible');
-let scrollTimeoutId;
-const clearScrollTimer = () => clearTimeout(scrollTimeoutId);
-// Stopping the timeout when mouse over menu(before it hides).
-header.addEventListener('mouseover', () => clearScrollTimer());
-// Restarting timeout when mouse leaves menu.
-header.addEventListener('mouseleave', () => {
-	// Check if not at the top of the page.
-	if (window.scrollY >= hero.offsetHeight) {
-		scrollTimeoutId = setTimeout(toggleNav, 2000);
-	}
-});
-document.addEventListener('scroll', () => {
+};
+
+// Handels the visibility of the menu with a timer.
+const menuVisibilityHandeler = () => {
 	// Only hides the menu, if the view is outside of the hero section.
 	if (window.scrollY <= hero.offsetHeight) {
 		clearScrollTimer();
 	} else {
-		// Brings back the menu on scroll.
+		// Bring back the menu on scroll.
 		header.classList.remove('header--hidden');
 		header.classList.add('header--visible');
 		// Clear the timer.
@@ -161,37 +163,39 @@ document.addEventListener('scroll', () => {
 		// Activates scroll timer if its not active.
 		scrollTimeoutId = setTimeout(toggleNav, 2000);
 	}
+};
+
+const clearScrollTimer = () => clearTimeout(scrollTimeoutId);
+/*
+# -----------------------------<|-------------|>---------------------------- #
+# ------------------------------|PAGE'S EVENTS|----------------------------- #
+# -----------------------------<|-------------|>---------------------------- #
+*/
+
+// On document load, dynamically build the menu links.
+window.addEventListener('load', () => navMenuBuilder());
+
+// Scroll to selected section.
+menuList.addEventListener('click', (event) => scrollToSection(event));
+
+// Main Scroll event.
+document.addEventListener('scroll', () => {
+	setSectionState();
+	setHeaderBackground();
+	svgAnimate();
+	menuVisibilityHandeler();
 });
 
-// On document load, get the list of sections.
-window.addEventListener('load', () => {
-	[...sectionsList] = document.querySelectorAll('.content__section');
-	const listOfColors = ['yellow', 'green', 'blue', 'red'];
-	// create an li element.
-	const fragment = document.createDocumentFragment();
-	for (let i = 0; i < sectionList.length; i++) {
-		let listItem = document.createElement('li');
-		let listItemLink = document.createElement('a');
-		listItemLink.innerText = sectionList[i].getAttribute('data-menu');
-		listItemLink.setAttribute('href', `#${sectionList[i].getAttribute('id')}`);
-		listItemLink.classList.add('header__link');
-		listItemLink.classList.add(`header__link--${listOfColors[i]}`);
-		sectionList[i].style.backgroundColor = listOfColors[i];
-		listItem.appendChild(listItemLink);
-		fragment.appendChild(listItem);
+// Sets the clicked link to active.
+menuList.addEventListener('click', onMenuItemClick);
+
+// Stopping the timeout when mouse over menu(before it hides).
+header.addEventListener('mouseover', () => clearScrollTimer());
+
+// Restarting timeout when pointer is outside of the menu.
+header.addEventListener('mouseleave', () => {
+	// Check if not at the top of the page.
+	if (window.scrollY >= hero.offsetHeight) {
+		scrollTimeoutId = setTimeout(toggleNav, 2000);
 	}
-	menuList.appendChild(fragment);
 });
-
-// window.addEventListener('scroll', () => {
-// 	let h2 = document.querySelector('h2');
-// 	let viewH = window.innerHeight;
-// 	let percentage = (window.innerHeight * 30) / 100;
-// 	console.log(viewH - percentage, h2.getBoundingClientRect().top);
-// 	let left = 500 - 0.3 * window.innerHeight;
-
-// 	console.log(left);
-// 	h2.style.left = 0;
-// });
-
-// 229;
