@@ -115,3 +115,15 @@
 .content__section {
 	height: 100vh;
 }
+
+.content__section h2 {
+	position: relative;
+	left: 100%;
+	transition: all ease-in 0.5s;
+}
+
+.content__section p {
+	position: relative;
+	right: 100%;
+	transition: all ease-in 0.5s;
+}

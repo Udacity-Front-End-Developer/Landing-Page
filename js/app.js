@@ -53,13 +53,17 @@ window.addEventListener('scroll', (e) => {
 	for (section of sectionList) {
 		let position = section.getBoundingClientRect().top;
 		if (
-			position < (window.innerHeight * 40) / 100 &&
-			position > (-window.innerHeight * 50) / 100
+			position < (window.innerHeight * 80) / 100 &&
+			position > (-window.innerHeight * 20) / 100
 		) {
 			section.style.border = '1px solid red';
+			section.children[0].style.left = 0;
+			section.children[1].style.right = 0;
 		} else {
 			if (section.style.border) {
 				section.style.border = '';
+				section.children[0].style.left = `${100}%`;
+				section.children[1].style.right = `${100}%`;
 			}
 		}
 	}
@@ -140,7 +144,7 @@ window.addEventListener('load', () => {
 		let listItem = document.createElement('li');
 		let listItemLink = document.createElement('a');
 		listItemLink.innerText = sectionList[i].getAttribute('data-menu');
-		listItemLink.setAttribute('href', sectionList[i].getAttribute('id'));
+		listItemLink.setAttribute('href', `#${sectionList[i].getAttribute('id')}`);
 		listItemLink.classList.add('header__link');
 		listItemLink.classList.add(`header__link--${listOfColors[i]}`);
 		listItem.appendChild(listItemLink);
@@ -148,3 +152,16 @@ window.addEventListener('load', () => {
 	}
 	menuList.appendChild(fragment);
 });
+
+// window.addEventListener('scroll', () => {
+// 	let h2 = document.querySelector('h2');
+// 	let viewH = window.innerHeight;
+// 	let percentage = (window.innerHeight * 30) / 100;
+// 	console.log(viewH - percentage, h2.getBoundingClientRect().top);
+// 	let left = 500 - 0.3 * window.innerHeight;
+
+// 	console.log(left);
+// 	h2.style.left = 0;
+// });
+
+// 229;
