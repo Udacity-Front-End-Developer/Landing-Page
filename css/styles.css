@@ -122,7 +122,7 @@
 	transition: all ease-in 0.5s;
 }
 
-.content__section p {
+p {
 	position: relative;
 	right: 100%;
 	transition: all ease-in 0.5s;

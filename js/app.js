@@ -52,18 +52,24 @@ const sectionList = document.querySelectorAll('.content__section');
 window.addEventListener('scroll', (e) => {
 	for (section of sectionList) {
 		let position = section.getBoundingClientRect().top;
+		let paragraphsList = section.querySelectorAll('p');
+		// 1:when active, 2:when inactive
 		if (
-			position < (window.innerHeight * 80) / 100 &&
-			position > (-window.innerHeight * 20) / 100
+			position < (window.innerHeight * 50) / 100 &&
+			position > (-window.innerHeight * 50) / 100
 		) {
 			section.style.border = '1px solid red';
-			section.children[0].style.left = 0;
-			section.children[1].style.right = 0;
+			section.children[0].style.left = 0; // header
+			for (let paragraph of paragraphsList) {
+				paragraph.style.right = 0;
+			}
 		} else {
 			if (section.style.border) {
 				section.style.border = '';
-				section.children[0].style.left = `${100}%`;
-				section.children[1].style.right = `${100}%`;
+				section.children[0].style.left = `${100}%`; // header
+				for (let paragraph of paragraphsList) {
+					paragraph.style.right = `${100}%`;
+				}
 			}
 		}
 	}
@@ -147,6 +153,7 @@ window.addEventListener('load', () => {
 		listItemLink.setAttribute('href', `#${sectionList[i].getAttribute('id')}`);
 		listItemLink.classList.add('header__link');
 		listItemLink.classList.add(`header__link--${listOfColors[i]}`);
+		sectionList[i].style.backgroundColor = listOfColors[i];
 		listItem.appendChild(listItemLink);
 		fragment.appendChild(listItem);
 	}
