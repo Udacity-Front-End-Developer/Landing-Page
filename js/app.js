@@ -70,10 +70,25 @@ window.addEventListener('scroll', (e) => {
 const header = document.querySelector('.header');
 window.addEventListener('scroll', (e) => {
 	if (window.pageYOffset >= (window.innerHeight * 40) / 100) {
-		console.log('show bg-color');
 		header.classList.remove('at-the-top');
 	} else {
-		console.log('remove bg-color');
 		header.classList.add('at-the-top');
 	}
 });
+
+// Toggle the active class for the nav items.
+const menuList = document.querySelector('.menu-list');
+const menuChildrenList = menuList.children;
+const removeActiveClassFromLinks = (list) => {
+	for (let item of list) {
+		item.children[0].classList.remove('header__link--active');
+	}
+};
+
+const onMenuItemClick = (event) => {
+	if (event.target.nodeName === 'A') {
+		removeActiveClassFromLinks(menuChildrenList);
+		event.target.classList.add('header__link--active');
+	}
+};
+menuList.addEventListener('click', onMenuItemClick);
