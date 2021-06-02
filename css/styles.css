@@ -24,7 +24,7 @@
 
 .header--hidden {
 	background-color: red;
-	top: -50px;
+	top: -10%;
 	transition: all ease-out 0.5s;
 }
 

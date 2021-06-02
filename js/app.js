@@ -66,7 +66,7 @@ window.addEventListener('scroll', (e) => {
 	}
 });
 
-// Changes the header's background color depending on its scroll position.
+// Changing the header's background color depending on its scroll position.
 const header = document.querySelector('.header');
 window.addEventListener('scroll', (e) => {
 	if (window.pageYOffset >= (window.innerHeight * 40) / 100) {
@@ -76,7 +76,7 @@ window.addEventListener('scroll', (e) => {
 	}
 });
 
-// Toggle the active class for the nav items.
+// Toggling the active class for the nav items.
 const menuList = document.querySelector('.menu-list');
 const menuChildrenList = menuList.children;
 const removeActiveClassFromLinks = (list) => {
@@ -92,3 +92,32 @@ const onMenuItemClick = (event) => {
 	}
 };
 menuList.addEventListener('click', onMenuItemClick);
+
+// Hiding the navigation menu when not scrolling.
+const toggleNav = () =>
+	header.classList.toggle('header--hidden', 'header--visible');
+let scrollTimeoutId;
+const clearScrollTimer = () => clearTimeout(scrollTimeoutId);
+// Stopping the timeout when mouse over menu(before it hides).
+header.addEventListener('mouseover', () => clearScrollTimer());
+// Restarting timeout when mouse leaves menu.
+header.addEventListener('mouseleave', () => {
+	// Check if not at the top of the page.
+	if (window.scrollY) {
+		scrollTimeoutId = setTimeout(toggleNav, 2000);
+	}
+});
+
+document.addEventListener('scroll', () => {
+	if (window.scrollY === 0) {
+		clearScrollTimer();
+	} else {
+		// Brings back the menu on scroll.
+		header.classList.remove('header--hidden');
+		header.classList.add('header--visible');
+		// Clear the timer.
+		clearScrollTimer();
+		// Activates scroll timer if its not active.
+		scrollTimeoutId = setTimeout(toggleNav, 2000);
+	}
+});
