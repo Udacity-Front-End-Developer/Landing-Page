@@ -119,7 +119,7 @@
 	overflow: hidden;
 }
 
-.content__section h2 {
+.content__section .section__header {
 	font-family: 'Dosis', sans-serif;
 	font-size: 2em;
 	position: relative;

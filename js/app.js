@@ -38,6 +38,7 @@ const setSectionStateTo_Active = (section, sectionContent) => {
 
 // Set section state to inactive.
 const setSectionStateTo_Inactive = (section, sectionContent) => {
+	removeActiveInHero();
 	currentActiveSection = null;
 	section.style.border = '';
 	// header.
@@ -145,6 +146,17 @@ const setMenuToCurrentActiveSection = (section) => {
 	});
 	let targetLink = targetList[0].children[0];
 	targetLink.classList.add('header__link--active');
+};
+
+// Removes any active state from the nav menu when the hero section is in the view.
+const removeActiveInHero = () => {
+	if (
+		currentActiveSection &&
+		hero.getBoundingClientRect().top >= (-window.innerHeight * 50) / 100
+	) {
+		removeActiveClassFromLinks(menuChildrenList);
+		console.log('close to top');
+	}
 };
 
 // Makes the link active.
