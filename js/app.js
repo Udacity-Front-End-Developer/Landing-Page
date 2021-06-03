@@ -8,10 +8,10 @@ const header = document.querySelector('.header');
 const hero = document.querySelector('.hero');
 const heroImage = document.querySelector('.hero__image');
 const menuList = document.querySelector('.menu-list');
-const menuChildrenList = menuList.children;
+const menuChildrenList = menuList.children; // li elements
 const listOfColors = ['yellow', 'green', 'blue', 'red']; // Optional
 let sectionsList = [];
-let currentActiveSection;
+let currentActiveSection; // Tracks the currently active section.
 let scrollTimeoutId; // Init the scolling timer.
 
 /*
@@ -24,46 +24,46 @@ let scrollTimeoutId; // Init the scolling timer.
  */
 
 // Set section state to active.
-const setSectionStateTo_Active = (section, paragraphsList) => {
+const setSectionStateTo_Active = (section, sectionContent) => {
 	currentActiveSection = section;
 	// TODO: add a class of active.
 	section.style.border = '1px solid red';
 	// header.
 	section.children[0].style.left = 0;
-	// paragraphs.
-	for (let paragraph of paragraphsList) {
-		paragraph.style.right = 0;
-	}
+	// section's content.
+	sectionContent.style.right = 0;
+	// Add active state to the corresponding menu link.
+	setMenuToCurrentActiveSection(currentActiveSection);
 };
+
 // Set section state to inactive.
-const setSectionStateTo_Inactive = (section, paragraphsList) => {
+const setSectionStateTo_Inactive = (section, sectionContent) => {
 	currentActiveSection = null;
 	section.style.border = '';
 	// header.
 	section.children[0].style.left = `${100}%`;
-	// paragraphs.
-	for (let paragraph of paragraphsList) {
-		paragraph.style.right = `${100}%`;
-	}
+	// section's content.
+	sectionContent.style.right = `${100}%`;
 };
 
 const positionTrigger = (position) =>
 	position < (window.innerHeight * 50) / 100 &&
 	position > (-window.innerHeight * 50) / 100;
 
+// Set the section to active when it's in the viewport.
 const setSectionState = () => {
 	for (section of sectionsList) {
 		let position = section.getBoundingClientRect().top;
-		let paragraphsList = section.querySelectorAll('p');
+		let sectionContent = section.querySelector('.section__content');
 		// Checking position against the two scroll states(1:when active, 2:when inactive).
 		if (positionTrigger(position)) {
 			// Only run this if we don't have a currentActiveSection.
 			if (!currentActiveSection) {
-				setSectionStateTo_Active(section, paragraphsList);
+				setSectionStateTo_Active(section, sectionContent);
 			}
 		} else {
 			if (section.style.border) {
-				setSectionStateTo_Inactive(section, paragraphsList);
+				setSectionStateTo_Inactive(section, sectionContent);
 			}
 		}
 	}
@@ -133,6 +133,18 @@ const removeActiveClassFromLinks = (list) => {
 	for (let item of list) {
 		item.children[0].classList.remove('header__link--active');
 	}
+};
+
+// Add an active state to navigation items when a section is in the viewport.
+const setMenuToCurrentActiveSection = (section) => {
+	let sectionId = section.getAttribute('id');
+	removeActiveClassFromLinks(menuChildrenList);
+	// find the corresponding link by its href from the menulistchildren.
+	let targetList = [...menuChildrenList].filter((list) => {
+		return list.children[0].getAttribute('href') === `#${sectionId}`;
+	});
+	let targetLink = targetList[0].children[0];
+	targetLink.classList.add('header__link--active');
 };
 
 // Makes the link active.
