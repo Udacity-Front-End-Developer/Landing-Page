@@ -51,13 +51,19 @@ const positionTrigger = (position) =>
 	position < (window.innerHeight * 50) / 100 &&
 	position > (-window.innerHeight * 50) / 100;
 
+const isCollapsed = (section) => {
+	return section.classList.contains('section--height-collapse');
+};
+
 // Set the section to active when it's in the viewport.
 const setSectionState = () => {
 	for (section of sectionsList) {
 		let position = section.getBoundingClientRect().top;
 		let sectionContent = section.querySelector('.section__content');
-		// Checking position against the two scroll states(1:when active, 2:when inactive).
-		if (positionTrigger(position)) {
+		/* The following condition checks the position against the two scroll states(1:when active, 2:when inactive),
+        and checks if the section is not collapsed.
+        */
+		if (positionTrigger(position) && !isCollapsed(section)) {
 			// Only run this if we don't have a currentActiveSection.
 			if (!currentActiveSection) {
 				setSectionStateTo_Active(section, sectionContent);
@@ -155,7 +161,6 @@ const removeActiveInHero = () => {
 		hero.getBoundingClientRect().top >= (-window.innerHeight * 50) / 100
 	) {
 		removeActiveClassFromLinks(menuChildrenList);
-		console.log('close to top');
 	}
 };
 
@@ -221,5 +226,24 @@ header.addEventListener('mouseleave', () => {
 	// Check if not at the top of the page.
 	if (window.scrollY >= hero.offsetHeight) {
 		scrollTimeoutId = setTimeout(toggleNav, 2000);
+	}
+});
+
+// On Section's header click, collapse the section.
+document.querySelector('.content').addEventListener('click', (event) => {
+	if (event.target.nodeName === 'I') {
+		let h2 = event.target.parentElement;
+		let section = h2.parentElement;
+		let upIcon = h2.querySelector('.fa-caret-up');
+		let downIcon = h2.querySelector('.fa-caret-down');
+		// Change this section's height.
+		section.classList.toggle('section--height-collapse');
+		// toggle the visibility of the up/down icons.
+		upIcon.classList.toggle('hidden');
+		downIcon.classList.toggle('hidden');
+		// Fix the header in the middle.
+		h2.classList.toggle('section__header--collapse');
+		// Hide the text wrapper.
+		h2.nextElementSibling.classList.toggle('hidden');
 	}
 });

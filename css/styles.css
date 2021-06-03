@@ -114,9 +114,9 @@
 }
 
 .content__section {
-	height: 100vh;
 	text-align: center;
 	overflow: hidden;
+	height: 100vh;
 }
 
 .content__section .section__header {
@@ -128,9 +128,30 @@
 }
 
 .section__content {
+	/* height: 100vh; */
 	position: relative;
 	right: 100%;
 	transition: all ease-in 0.5s;
 	font-family: 'Montserrat', sana-serif;
 	padding: 1em;
+}
+
+/* Section collapse */
+.hidden {
+	display: none;
+	/* visibility: hidden; */
+}
+
+.section--height-collapse {
+	height: 100%;
+}
+
+.section__header--collapse {
+	left: 0 !important;
+}
+
+i {
+	padding-right: 0.5em;
+	position: absolute;
+	right: 2%;
 }
