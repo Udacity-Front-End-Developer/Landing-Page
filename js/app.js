@@ -1,9 +1,10 @@
 /*
 # ---------------------------<|----------------|>--------------------------- #
 # ----------------------------|GLOBAL VARIABLES|---------------------------- #
-# ---------------------------<|----------------|>--------------------------- #
+# ---------------------------<|------INIT------|>--------------------------- #
 */
 
+const content = document.querySelector('.content');
 const header = document.querySelector('.header');
 const hero = document.querySelector('.hero');
 const heroImage = document.querySelector('.hero__image');
@@ -17,7 +18,7 @@ let scrollTimeoutId; // Init the scolling timer.
 /*
 # ----------------------------<|----------------|>--------------------------- #
 # -----------------------------|HELPER FUNCTIONS|---------------------------- #
-# ----------------------------<|----------------|>--------------------------- #
+# ----------------------------<|------LOGIC-----|>--------------------------- #
 */
 /*
 # -----------------------------|section's helpers|---------------------------- #
@@ -82,18 +83,37 @@ const setSectionState = () => {
  that's why scrollToSection scrolls to top of a section minus the height
  of the menubar
  */
+// TOFIX: there's a weird behavior in chrome when jumping to a section then jumping back to home, the menu disapears :(.
 const scrollToSection = (e) => {
 	if (e.target.nodeName === 'A') {
-		e.preventDefault();
-		let link = e.target;
-		let target = document.querySelector(link.getAttribute('href'));
-		let targetTop = target.getBoundingClientRect().top;
-		let top = targetTop - menuList.offsetHeight;
-		window.scrollBy({
-			top: top,
-			// Scroll behavior is already set in the styleSheet.
-		});
+		scrollToSectionBy_Anchor(e);
+	} else if (e.target.nodeName === 'I') {
+		scrollToSectionBy_Icon(e);
 	}
+};
+
+const scrollToSectionBy_Icon = (e) => {
+	let section = e.target.parentElement.parentElement;
+	let target = document.querySelector(`#${section.getAttribute('id')}`);
+	console.log(target);
+	let targetTop = target.getBoundingClientRect().top;
+	let top = targetTop - menuList.offsetHeight;
+	window.scrollBy({
+		top: top,
+		// Scroll behavior is already set in the styleSheet.
+	});
+};
+
+const scrollToSectionBy_Anchor = (e) => {
+	e.preventDefault();
+	let link = e.target;
+	let target = document.querySelector(link.getAttribute('href'));
+	let targetTop = target.getBoundingClientRect().top;
+	let top = targetTop - menuList.offsetHeight;
+	window.scrollBy({
+		top: top,
+		// Scroll behavior is already set in the styleSheet.
+	});
 };
 
 /*
@@ -178,6 +198,8 @@ const toggleNav = () => {
 	header.classList.toggle('header--hidden', 'header--visible');
 };
 
+// TODO: If we scroll to a section by clicking a link, section should scrollUp the widht of the menu when the menu hides.
+
 // Handels the visibility of the menu with a timer.
 const menuVisibilityHandeler = () => {
 	// Only hides the menu, if the view is outside of the hero section.
@@ -209,6 +231,11 @@ menuList.addEventListener('click', (event) => scrollToSection(event));
 
 // Main Scroll event.
 document.addEventListener('scroll', () => {
+	if (window.pageYOffset >= (hero.offsetHeight * 50) / 100) {
+		document.querySelector('.scroll-to-top').style.display = 'block';
+	} else {
+		document.querySelector('.scroll-to-top').style.display = 'none';
+	}
 	setSectionState();
 	setHeaderBackground();
 	svgAnimate();
@@ -230,12 +257,13 @@ header.addEventListener('mouseleave', () => {
 });
 
 // On Section's header click, collapse the section.
-document.querySelector('.content').addEventListener('click', (event) => {
+content.addEventListener('click', (event) => {
 	if (event.target.nodeName === 'I') {
 		let h2 = event.target.parentElement;
 		let section = h2.parentElement;
 		let upIcon = h2.querySelector('.fa-caret-up');
 		let downIcon = h2.querySelector('.fa-caret-down');
+
 		// Change this section's height.
 		section.classList.toggle('section--height-collapse');
 		// toggle the visibility of the up/down icons.
@@ -245,5 +273,14 @@ document.querySelector('.content').addEventListener('click', (event) => {
 		h2.classList.toggle('section__header--collapse');
 		// Hide the text wrapper.
 		h2.nextElementSibling.classList.toggle('hidden');
+		// ScrollTo section when expanded. This can be uncommented.
+		scrollToSection(event);
 	}
+});
+
+document.querySelector('.scroll-to-top').addEventListener('click', (event) => {
+	console.log('clicked');
+	window.scroll({
+		top: 0,
+	});
 });
