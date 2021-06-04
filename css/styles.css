@@ -105,16 +105,21 @@ body {
 	margin-right: auto;
 }
 
+/* TODO: find a way to add these pseudo elements dynamically. */
 .header__link--yellow::after {
-	background-color: yellow;
+	background-color: #f1c40f;
 }
 
 .header__link--green::after {
-	background-color: green;
+	background-color: #16a085;
 }
 
 .header__link--blue::after {
-	background-color: blue;
+	background-color: #2980b9;
+}
+
+.header__link--red::after {
+	background-color: #e74c3c;
 }
 
 /* HERO */
@@ -141,8 +146,8 @@ body {
 	position: absolute;
 	bottom: 0;
 	color: #bbb;
-	font-family: sans-serif;
-	font-size: 0.5rem;
+	font-size: 0.8rem;
+	margin-bottom: 0.2rem;
 }
 
 .hero__header {
@@ -162,6 +167,9 @@ body {
 }
 
 .content__section .section__header {
+	margin-top: 1em;
+	margin-bottom: 0.5em;
+	color: #2e3436;
 	font-family: 'Dosis', sans-serif;
 	font-size: 4em;
 	position: relative;
@@ -170,7 +178,10 @@ body {
 }
 
 .section__content {
+	margin-bottom: 1em;
+	color: #2e3436;
 	position: relative;
+	height: 100vh;
 	right: 100%;
 	transition: all ease-in 0.5s;
 	font-family: 'Montserrat', sana-serif;
@@ -191,11 +202,16 @@ body {
 	left: 0 !important;
 }
 
+.section--active {
+	box-shadow: inset 2px 2px 10px 3px #bbb;
+	/* border: 5px solid red; */
+}
 /* 
 Found the answer for substring-matching selectors at:
 https://stackoverflow.com/questions/3338680/is-there-a-css-selector-by-class-prefix
   */
 i[class*=' fa-caret'] {
+	cursor: pointer;
 	padding-right: 0.5em;
 	position: absolute;
 	right: 2%;
@@ -265,11 +281,16 @@ i[class*=' fa-caret'] {
 		background-color: #fd8821;
 		padding: 160px 60px 0;
 		margin-left: 0;
+		transition: all ease-out 0.5s;
+		transition-delay: 0.1s;
 	}
 
 	.header__menu > nav > ul > li {
+		transition-delay: 0.6s;
 		margin-right: 10em;
 		white-space: nowrap;
+		transform: translateX(-100%);
+		transition: transform ease-out 0.6s;
 	}
 
 	.header__menu > nav {
@@ -281,8 +302,25 @@ i[class*=' fa-caret'] {
 	}
 
 	.header__hamburger {
+		/* margin: auto 0; */
+		align-self: center;
 		font-size: 2em;
 		color: white;
+		z-index: 3;
 		display: block;
 	}
+
+	.header__hamburger:hover {
+		cursor: pointer;
+	}
+}
+
+/* Must keep at the bottom of the other properties */
+.header__menu--active {
+	transform: translateX(0);
+}
+
+.header__menu--active .menu__item--active {
+	transition-delay: 0.4s !important;
+	transform: translateX(0) !important;
 }

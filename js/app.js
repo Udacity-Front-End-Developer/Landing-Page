@@ -10,7 +10,12 @@ const hero = document.querySelector('.hero');
 const heroImage = document.querySelector('.hero__image');
 const menuList = document.querySelector('.menu-list');
 const menuChildrenList = menuList.children; // li elements
-const listOfColors = ['yellow', 'green', 'blue', 'red']; // Optional
+listOfColors_links = ['yellow', 'green', 'blue', 'red'];
+const listOfColors = ['#f1c40f ', '#16a085 ', '#2980b9 ', '#e74c3c ']; // Optional
+const hamburger = document.querySelector('.header__hamburger');
+const hamburger_expand = document.querySelector('.hamburger-expand');
+const hamburger_collapse = document.querySelector('.hamburger-collapse');
+const headerMenu = document.querySelector('.header__menu');
 let sectionsList = [];
 let currentActiveSection; // Tracks the currently active section.
 let scrollTimeoutId; // Init the scolling timer.
@@ -27,25 +32,29 @@ let scrollTimeoutId; // Init the scolling timer.
 // Set section state to active.
 const setSectionStateTo_Active = (section, sectionContent) => {
 	currentActiveSection = section;
+	console.log('active');
 	// TODO: add a class of active.
-	section.style.border = '1px solid red';
+	// inset 2px 2px 10px 3px #453c3c
+	// section.style.border = '1px solid red';
 	// header.
 	section.children[0].style.left = 0;
 	// section's content.
 	sectionContent.style.right = 0;
 	// Add active state to the corresponding menu link.
 	setMenuToCurrentActiveSection(currentActiveSection);
+	section.classList.add('section--active');
 };
 
 // Set section state to inactive.
 const setSectionStateTo_Inactive = (section, sectionContent) => {
 	removeActiveInHero();
 	currentActiveSection = null;
-	section.style.border = '';
+	// section.style.border = '';
 	// header.
 	section.children[0].style.left = `${100}%`;
 	// section's content.
 	sectionContent.style.right = `${100}%`;
+	section.classList.remove('section--active');
 };
 
 const positionTrigger = (position) =>
@@ -70,7 +79,7 @@ const setSectionState = () => {
 				setSectionStateTo_Active(section, sectionContent);
 			}
 		} else {
-			if (section.style.border) {
+			if (section.classList.contains('section--active')) {
 				setSectionStateTo_Inactive(section, sectionContent);
 			}
 		}
@@ -86,6 +95,8 @@ const setSectionState = () => {
 // TOFIX: there's a weird behavior in chrome when jumping to a section then jumping back to home, the menu disapears :(.
 const scrollToSection = (e) => {
 	if (e.target.nodeName === 'A') {
+		console.log('menu active');
+
 		scrollToSectionBy_Anchor(e);
 	} else if (e.target.nodeName === 'I') {
 		scrollToSectionBy_Icon(e);
@@ -106,6 +117,10 @@ const scrollToSectionBy_Icon = (e) => {
 
 const scrollToSectionBy_Anchor = (e) => {
 	e.preventDefault();
+	// If responsive menu is active, remove it.
+	if (headerMenu.classList.contains('header__menu--active')) {
+		hamburgerVisibilyHandler();
+	}
 	let link = e.target;
 	let target = document.querySelector(link.getAttribute('href'));
 	let targetTop = target.getBoundingClientRect().top;
@@ -131,8 +146,8 @@ const navMenuBuilder = () => {
 		listItemLink.innerText = sectionsList[i].getAttribute('data-menu');
 		listItemLink.setAttribute('href', `#${sectionsList[i].getAttribute('id')}`);
 		listItemLink.classList.add('header__link');
-		listItemLink.classList.add(`header__link--${listOfColors[i]}`);
-		sectionsList[i].style.backgroundColor = listOfColors[i];
+		listItemLink.classList.add(`header__link--${listOfColors_links[i]}`);
+		sectionsList[i].style.backgroundColor = `${listOfColors[i]}`;
 		listItem.appendChild(listItemLink);
 		fragment.appendChild(listItem);
 	}
@@ -202,8 +217,11 @@ const toggleNav = () => {
 
 // Handels the visibility of the menu with a timer.
 const menuVisibilityHandeler = () => {
-	// Only hides the menu, if the view is outside of the hero section.
-	if (window.scrollY <= hero.offsetHeight) {
+	// Only hides the menu, if the view is outside of the hero section and/or the responsive menu is not active.
+	if (
+		window.scrollY <= hero.offsetHeight ||
+		headerMenu.classList.contains('header__menu--active')
+	) {
 		clearScrollTimer();
 	} else {
 		// Bring back the menu on scroll.
@@ -214,6 +232,17 @@ const menuVisibilityHandeler = () => {
 		// Activates scroll timer if its not active.
 		scrollTimeoutId = setTimeout(toggleNav, 2000);
 	}
+};
+
+const hamburgerVisibilyHandler = () => {
+	// Toggle active class of the li elements.
+	for (let li of [...menuChildrenList]) {
+		console.log(li.classList);
+		li.classList.toggle('menu__item--active');
+	}
+	headerMenu.classList.toggle('header__menu--active');
+	hamburger_expand.classList.toggle('hidden');
+	hamburger_collapse.classList.toggle('hidden');
 };
 
 const clearScrollTimer = () => clearTimeout(scrollTimeoutId);
@@ -231,6 +260,7 @@ menuList.addEventListener('click', (event) => scrollToSection(event));
 
 // Main Scroll event.
 document.addEventListener('scroll', () => {
+	// Shows the scroll-to-top btn if we scroll pass a certain distance from the top of the page.
 	if (window.pageYOffset >= (hero.offsetHeight * 50) / 100) {
 		document.querySelector('.scroll-to-top').style.display = 'block';
 	} else {
@@ -257,13 +287,13 @@ header.addEventListener('mouseleave', () => {
 });
 
 // On Section's header click, collapse the section.
+// TODO: refactor this to make use of helper function.
 content.addEventListener('click', (event) => {
 	if (event.target.nodeName === 'I') {
 		let h2 = event.target.parentElement;
 		let section = h2.parentElement;
 		let upIcon = h2.querySelector('.fa-caret-up');
 		let downIcon = h2.querySelector('.fa-caret-down');
-
 		// Change this section's height.
 		section.classList.toggle('section--height-collapse');
 		// toggle the visibility of the up/down icons.
@@ -278,6 +308,10 @@ content.addEventListener('click', (event) => {
 	}
 });
 
+// Hamburger icon click handler.
+hamburger.addEventListener('click', () => hamburgerVisibilyHandler());
+
+// Scroll to top btn click handler.
 document.querySelector('.scroll-to-top').addEventListener('click', (event) => {
 	console.log('clicked');
 	window.scroll({
