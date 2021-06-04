@@ -1,5 +1,9 @@
 # fend-Udacity-LandingPage
 
+## Deployed version:
+
+https://udacity-fend-landingpage.netlify.app/
+
 ## Description:
 
 The project is part of Udacity's Front End Nanodegree Content.
