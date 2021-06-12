@@ -140,17 +140,17 @@ const navMenuBuilder = () => {
 	// Populate the list of sections.
 	[...sectionsList] = document.querySelectorAll('.content__section');
 	const fragment = document.createDocumentFragment();
-	for (let i = 0; i < sectionsList.length; i++) {
+	sectionsList.forEach((section, index) => {
 		let listItem = document.createElement('li');
 		let listItemLink = document.createElement('a');
-		listItemLink.innerText = sectionsList[i].getAttribute('data-menu');
-		listItemLink.setAttribute('href', `#${sectionsList[i].getAttribute('id')}`);
+		listItemLink.innerText = section.getAttribute('data-menu');
+		listItemLink.setAttribute('href', `#${section.getAttribute('id')}`);
 		listItemLink.classList.add('header__link');
-		listItemLink.classList.add(`header__link--${listOfColors_links[i]}`);
-		sectionsList[i].style.backgroundColor = `${listOfColors[i]}`;
+		listItemLink.classList.add(`header__link--${listOfColors_links[index]}`);
+		sectionsList[index].style.backgroundColor = `${listOfColors[index]}`;
 		listItem.appendChild(listItemLink);
 		fragment.appendChild(listItem);
-	}
+	});
 	menuList.appendChild(fragment);
 };
 
@@ -237,7 +237,6 @@ const menuVisibilityHandeler = () => {
 const hamburgerVisibilyHandler = () => {
 	// Toggle active class of the li elements.
 	for (let li of [...menuChildrenList]) {
-		console.log(li.classList);
 		li.classList.toggle('menu__item--active');
 	}
 	headerMenu.classList.toggle('header__menu--active');
