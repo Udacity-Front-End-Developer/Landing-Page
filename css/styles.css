@@ -261,10 +261,14 @@ i[class*=' fa-caret'] {
 	.section__content {
 		font-size: 1em;
 		line-height: 1.5em;
-		padding: 0 3em;
+		padding: 0 0;
 		margin: 2em;
 		/* text-justify: inter-word; */
 		/* text-align: justify; */
+	}
+
+	.section__content > p {
+		text-align: unset;
 	}
 
 	.header__home {
