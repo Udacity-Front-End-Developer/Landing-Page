@@ -251,7 +251,7 @@ i[class*=' fa-caret'] {
 
 @media screen and (max-width: 810px) {
 	.hero__header {
-		font-size: 5rem;
+		font-size: 3.3rem;
 	}
 
 	.content__section .section__header {
