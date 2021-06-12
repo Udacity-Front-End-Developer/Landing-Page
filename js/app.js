@@ -32,7 +32,6 @@ let scrollTimeoutId; // Init the scolling timer.
 // Set section state to active.
 const setSectionStateTo_Active = (section, sectionContent) => {
 	currentActiveSection = section;
-	console.log('active');
 	// TODO: add a class of active.
 	// inset 2px 2px 10px 3px #453c3c
 	// section.style.border = '1px solid red';
@@ -95,8 +94,6 @@ const setSectionState = () => {
 // TOFIX: there's a weird behavior in chrome when jumping to a section then jumping back to home, the menu disapears :(.
 const scrollToSection = (e) => {
 	if (e.target.nodeName === 'A') {
-		console.log('menu active');
-
 		scrollToSectionBy_Anchor(e);
 	} else if (e.target.nodeName === 'I') {
 		scrollToSectionBy_Icon(e);
