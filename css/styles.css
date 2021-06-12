@@ -298,7 +298,7 @@ i[class*=' fa-caret'] {
 	}
 
 	.header__menu > nav {
-		margin-left: -10%;
+		margin-left: 10%;
 	}
 
 	.header__menu > nav > ul > li > a {

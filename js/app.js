@@ -104,7 +104,7 @@ const scrollToSectionBy_Icon = (e) => {
 	let section = e.target.parentElement.parentElement;
 	let target = document.querySelector(`#${section.getAttribute('id')}`);
 	let targetTop = target.getBoundingClientRect().top;
-	let top = targetTop - menuList.offsetHeight;
+	let top = targetTop - header.offsetHeight;
 	window.scrollBy({
 		top: top,
 		// Scroll behavior is already set in the styleSheet.
@@ -120,7 +120,7 @@ const scrollToSectionBy_Anchor = (e) => {
 	let link = e.target;
 	let target = document.querySelector(link.getAttribute('href'));
 	let targetTop = target.getBoundingClientRect().top;
-	let top = targetTop - menuList.offsetHeight;
+	let top = targetTop - header.offsetHeight;
 	window.scrollBy({
 		top: top,
 		// Scroll behavior is already set in the styleSheet.
