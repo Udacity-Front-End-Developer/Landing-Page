@@ -103,7 +103,6 @@ const scrollToSection = (e) => {
 const scrollToSectionBy_Icon = (e) => {
 	let section = e.target.parentElement.parentElement;
 	let target = document.querySelector(`#${section.getAttribute('id')}`);
-	console.log(target);
 	let targetTop = target.getBoundingClientRect().top;
 	let top = targetTop - menuList.offsetHeight;
 	window.scrollBy({
@@ -309,7 +308,6 @@ hamburger.addEventListener('click', () => hamburgerVisibilyHandler());
 
 // Scroll to top btn click handler.
 document.querySelector('.scroll-to-top').addEventListener('click', (event) => {
-	console.log('clicked');
 	window.scroll({
 		top: 0,
 	});
