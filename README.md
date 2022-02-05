@@ -36,5 +36,5 @@ This project has been evaluated by a Udacity code reviewer according to the Pers
 
 https://udacity-fend-landingpage.netlify.app/
 
-- [x]Project reviewed and passed successfully.
-  ![alt text](repo_images/landing-review.png)
+- [x] Project reviewed and passed successfully.
+      ![alt text](repo_images/landing-review.png)
