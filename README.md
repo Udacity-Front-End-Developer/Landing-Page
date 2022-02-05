@@ -25,7 +25,7 @@ pure JavaScript, CSS and HTML. **NO EXTERNAL LIBRARIES**
 
 ## Rubric
 
-This project has been evaluated by a Udacity code reviewer according to the Personal Blog Website project specifications below.
+This project has been evaluated by a Udacity code reviewer according to the Landing Page project specifications below.
 
 <details>
 <summary>Project specification:</summary>
